@@ -3,8 +3,9 @@
 
 #include <stddef.h>
 
-typedef void (*func_free)(void *data);
-typedef void (*func_print)(void *data);
+#define SIZEOF_STACK sizeof(struct stack)
+
+typedef struct stack my_stack;
 
 struct item
 {
@@ -16,22 +17,23 @@ struct stack
 {
     struct item *head;
     size_t size;
-    int error;
     size_t sizeof_data;
+    int error;
+
+    void (* free_func)(void *data);
+    void (* print_func)(void *data);
 };
 
 // create and destroy stack
 struct stack *init_stack(size_t sizeof_data);
-void clear_stack(struct stack* stack, func_free data_free);
-void free_stack(struct stack* stack, func_free data_free);
+void clear_stack(void *void_stack);
+void free_stack(void *void_stack);
 
 // update stack
-int insert_stack(struct stack *stack, void *data, size_t sizeof_data);
-struct item *pop_stack(struct stack *stack, size_t sizeof_data);
-
-// check status of stack
+int push_stack(struct stack *stack, void *data);
+void *pop_stack(struct stack *stack, size_t sizeof_data);
 
 // print data in stack
-void print_stack(struct stack *stack, func_print data_print);
+void print_stack(void *void_stack);
 
 #endif /* ! STACK_H */
